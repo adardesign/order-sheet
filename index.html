@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Shibolet Order Sheet</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    </head>
+    <body>
+
+
+
+
+
+<nav class="order-nav">
+    <a href="#honey" data-catagory="honey">Honey</a>
+    <a href="#tea" data-catagory="tea">tea</a>
+    <a href="#nuts" data-catagory="nuts">nuts</a>
+</nav> 
+
+<form id="orderForm">
+    <section id="honey"></section>
+    <section id="tea"></section>
+    <section id="nuts"></section>
+</form>
+
+
+
+
+
+
+
+
+
+<script src="src/jquery-3.1.1.min.js"></script>
+<script src="src/microTmpl.js"></script>
+
+<script>
+
+// add local storage
+   $(".order-nav a").on("click", function onClick() {
+       jThis = $(this),
+        catagory = jThis.attr("data-catagory");
+        if(jThis.hasClass("loaded")) return;
+        $.getJSON("data/"+catagory+".json", function(data){
+            renderSection({
+                catagory:catagory,
+                data:data
+            })
+        });
+   });
+
+    renderSection = function renderSection(dataObj) {
+        var ele = $("#"+dataObj.catagory);
+        ele.html(tmpl("catagoryTmpl", dataObj));
+    }
+
+</script>
+
+
+
+    <script type="tmpl" id="catagoryTmpl">
+        <h1><%=catagory%></h1> 
+        <ul>
+            <%data.forEach(function(e){%>
+                <li>
+                    <fieldset>
+                        <label for="selectes"></label>   
+                        <input name="<%=e.name%>" type="checkbox">
+                    </fieldset>
+                    <span class="title"><%=e.title%></span>
+                    <img src="<%=e.image%>">
+                    <span class="price"><%=e.price%></span>
+                    <span class="certification">
+                        <%=e.certification%>
+                    </span>
+                    <span class"qty">
+                        Qty: <input value="1">  
+                    </span>
+
+                </li>
+            <%});%> 
+        </ul>
+    </script>
+
+
+
+
+        <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+        <script>
+            window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+            ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+        </script>
+        <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+    </body>
+</html>
