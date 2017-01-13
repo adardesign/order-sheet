@@ -34,6 +34,8 @@
             padding: 30px;
             margin:30px 0 0;
         }
+        .closed{background: #eee;}
+        .hide{display: none;}
         </style>
     </head>
     <body>
@@ -54,6 +56,10 @@
     <section id="nuts"></section>
 </form>
 
+<section id="order-summary">
+    <h2>Order Summary</h2>
+    <ul></ul>
+</section>
 
 <form id="order-details">
     <h3>Order Information:</h3>
@@ -129,14 +135,60 @@
 
    $("#orderForm").on("change", ".item-select", function(){
     var jThis = $(this),
-        selected = jThis.prop("checked");
-        jThis.closest("li").toggleClass("selected", selected);
+        selected = jThis.prop("checked"),
+        itemEle = jThis.closest("li"),
+        id = itemEle.attr("data-id");
+        
+       itemEle.toggleClass("selected", selected);
+        if(selected){
+            addToOrder({
+                id:id,
+                price:itemEle.find(".item-price strong").text(),
+                title:itemEle.find(".item-title").text()
+            });
+        }else{
+            removeFromOrder(id);
+        }
+   });
+
+   $("#orderForm").on("click", "h1", function(){
+    $(this).toggleClass("closed").next("ul").toggleClass("hide");
+   });
+
+   $("#order-summary").on("click", ".remove-item", function(){
+       var id = $(this).closest("li").attr("data-id");
+       removeFromOrder(id); 
+        $("#orderForm").find("[data-id="+id+"]").removeClass("selected").find(".item-select").prop("checked", false);
    });
 
     renderSection = function renderSection(dataObj) {
         var ele = $("#"+dataObj.catagory);
         ele.html(tmpl("catagoryTmpl", dataObj));
     }
+
+    addToOrder = function addToOrder(obj) {
+        if(!orderSummary[obj.id]){
+            orderSummary[obj.id] = obj;
+            refreshOrderSummary();
+        }
+    };
+    removeFromOrder = function removeFromOrder(id) {
+        if(orderSummary[id]){
+            delete orderSummary[id];
+            refreshOrderSummary();
+        }
+
+    };
+
+    refreshOrderSummary = function refreshOrderSummary() {
+        $("#order-summary").find("ul").html(tmpl("orderSummaryTmpl", {}))
+    }
+    submitOrder = function submitOrder() {
+        
+    }
+
+var orderSummary = {};
+
 
 </script>
 
@@ -152,24 +204,37 @@
                         <input class="item-select" name="<%=e.id%>" id="select-<%=e.id%>" type="checkbox">
                         <span class="item-title"><%=e.title%></span>
                         <img src="images/<%=e.image%>">
-                        <span class="item-price">Price: <%=e.price%></span>
+                        <span class="item-price">Price: <strong><%=e.price%></strong></span>
                         <span class="item-certification">
-                            certification: <%=e.certification%>
+                            Certification: <%=e.certification%>
                         </span>
                         <span class="item-size">Size: <%=e.size%></span>
-                        <span class"item-qty">
-                            Qty: <input type="number" name="qty" value="1">
-                        </span>
-                        <span class"item-comment">
-                            comment: <input name="comment" type="text">  
-                        </span>
                     </fieldset>
                 </li>
             <%});%> 
         </ul>
     </script>
 
+    <script type="tmpl" id="orderSummaryTmpl">
+        <ul>
+            <%Object.keys(orderSummary).forEach(function(j){  var e = orderSummary[j];%>
+                <li data-id="<%=e.id%>">
+                    <button class="remove-item">Remove</button>
+                    <fieldset>
+                        <span><%=e.title%></span>
+                        <span>$<%=e.price%></span>
+                        <span class"item-qty">
+                            Qty: <input type="number" name="qty" value="1">
+                        </span>
+                        <span class"item-comment">
+                            comment: <input name="comment" type="text">  
+                        </span>
 
+                    </fieldset>
+                </li>
+            <%});%> 
+        </ul>
+    </script>
 
 
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
