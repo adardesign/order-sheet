@@ -5,7 +5,7 @@
   "price": 41.6,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-24102B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-24102A.jpg",
   "description": ""
 }, {
@@ -15,7 +15,7 @@
   "price": 45.9,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-25058B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-25058A.jpg",
   "description": ""
 }, {
@@ -25,7 +25,7 @@
   "price": 48,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-24101B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-24101A.jpg",
   "description": ""
 }, {
@@ -35,7 +35,7 @@
   "price": 36.5,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-24098B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-24098A.jpg",
   "description": ""
 }, {
@@ -45,7 +45,7 @@
   "price": 84.85,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-24097B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-24097A.jpg",
   "description": ""
 }, {
@@ -55,7 +55,7 @@
   "price": 64.2,
   "certification": "OU",
   "size": "24oz",
-  "image": "/data/images/10-24099B.jpg",
+  "image": "teaSample.jpg",
   "largeImage": "/data/images/10-24099A.jpg",
   "description": ""
 }]
