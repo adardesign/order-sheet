@@ -7,241 +7,223 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+        <link rel="stylesheet" type="text/css" href="src/css/bootstrap.css">
         <style type="text/css">
-        #orderForm section{clear: both; margin-bottom: 20px;}
-        #orderForm ul{margin: 0; padding: 0;}        
-        #orderForm li{
+        .container section{clear: both; margin-bottom: 20px;}
+        #order-form{min-height: 200px;}
+        #order-form ul{margin: 0; padding: 0;}        
+        #order-form li{
             border:1px solid #eee;
-            width: 30%;
+            width: 20%;
             float: left;
             position: relative;
             list-style: none;
         }
 
-        #orderForm li.selected{background-color: #ddd;}
-        #orderForm li fieldset{ border: none;}
-        #orderForm img{max-width: 180px;}
-        #orderForm li span{display: block;}
-        #orderForm .item-select{display: none;}
-        #orderForm .item-select-label{
-            position: absolute;
-            width: 100%;
-            height: 60%;
+        #order-form li.selected{background-color: #eee;}
+        #order-form li .item-remove{display:none;}
+        #order-form li.selected .item-remove{display: inline;}
+        #order-form li.selected .item-add{display: none;}
+        #order-form li fieldset{ border: none;}
+        #order-form  .item-image-container{
+            margin:0 0 25px;
+            padding:5px;
+            text-align:center;
+            background: #fff;
         }
+        #order-form .badge-success{display: none;}
+        #order-form  .selected .badge-success{
+            display: block;
+            position: absolute;
+            right:10px;
+            top:10px;
+        }
+        #order-form img{max-width: 180px;}
+        #order-form li span{display: block;}
         #order-details{
             clear: both;
-            padding: 30px;
-            margin:30px 0 0;
+        }
+        #order-summary{
+            margin-bottom: 40px;
         }
         .closed{background: #eee;}
         .hide{display: none;}
+
+       
+        .card-footer{
+            text-align: center;
+        }
         </style>
     </head>
     <body>
 
 
+<div class="container">
+    <h1>Shibolet.</h1>
+    
+    <div class="card text-center">
+      <div class="card-header">
+            <nav class="nav order-nav nav-tabs card-header-tabs">
+            <a class="nav-link" href="#honey" data-catagory="honey">Honey</a>
+            <a class="nav-link" href="#tea" data-catagory="tea">Tea</a>
+            <a class="nav-link" href="#nuts" data-catagory="nuts">Nuts</a>
+            </nav> 
+        </div>
+    </div>
 
-<h1>Shibolet Inc.</h1>
 
-<nav class="order-nav">
-    <a href="#honey" data-catagory="honey">Honey</a>
-    <a href="#tea" data-catagory="tea">tea</a>
-    <a href="#nuts" data-catagory="nuts">nuts</a>
-</nav> 
+    <section id="order-form">
+        <section id="honey"></section>
+        <section id="tea"></section>
+        <section id="nuts"></section>
+    </section>
 
-<form id="orderForm">
-    <section id="honey"></section>
-    <section id="tea"></section>
-    <section id="nuts"></section>
-</form>
+    <section id="order-summary">
+        <h2>Order Summary</h2>
+        <ul class="list-group"></ul>
+    </section>
 
-<section id="order-summary">
-    <h2>Order Summary</h2>
-    <ul></ul>
+    <section id="order-details">
+    <h2>Order Information:</h2>
+
+        <form id="order-information"></form>
+            <div class="order-salesmen-id form-group">
+                <label>Date:</label>
+                <input class="form-control" type="date" name="order-date" value="002">
+            </div>
+            <div class="form-group order-salesmen-id form-group">
+                <label>salesmen-id</label>
+                <input class="form-control" type="text" name="salesmen-id" value="002">
+            </div>
+            <div class="order-customer-name form-group">
+                <label>Customer Company</label>
+                <input class="form-control" type="text" name="customer-name">
+            </div>
+            <div class="form-group order-customer-name form-group">
+                <label>Customer Contact name</label>
+                <input class="form-control" type="text" name="customer-name">
+            </div>
+
+            <div class="form-group order-customer-address form-group">
+                <label>Customer Address</label>
+                <input class="form-control" type="text" name="customer-name">
+            </div>
+
+
+
+            <div class="form-group order-customer-address form-group">
+                <label>Customer Address</label>
+                <input class="form-control" type="text" name="customer-name">
+            </div>
+
+
+
+            <div class="form-group order-customer-address form-group">
+                <label>Customer Address</label>
+                <input class="form-control" type="text" name="customer-name">
+            </div>
+
+
+            <div class="order-needed-by form-group">
+                <label>Order Needed By:</label>
+                <input class="form-control" type="date" name="order-needed-by">
+            </div>
+
+            <div class="order-customer-phone form-group">
+                <input type="text" name="order-needed-by">
+            </div>
+
+            <div class="order-comments form-group">
+                <label>General comments:</label>
+                <input type="text" name="order-comments">
+            </div>
+            <div class="form-group">            
+                <button class="btn btn-lg btn-block btn-primary">Submit Order</button>
+            </div>
+    </form>
 </section>
 
-<form id="order-details">
-    <h3>Order Information:</h3>
-    <fieldset>
-        <span class="order-salesmen-id">
-            <label>Date:</label>
-            <input type="date" name="order-date" value="002">
-        </span>
-       <span class="order-salesmen-id">
-            <label>salesmen-id</label>
-            <input type="text" name="salesmen-id" value="002">
-        </span>
-    </fieldset>
-
-    <fieldset>
-        <span class="order-customer-name">
-            <label>Customer Company</label>
-            <input type="text" name="customer-name">
-        </span>
-    </fieldset>
-    <span class="order-customer-name">
-        <label>Customer Contact name</label>
-        <input type="text" name="customer-name">
-    </span>
-
-    <span class="order-customer-phone">
-        <label>Customer Contact phone</label>
-        <input type="text" name="customer-name">
-    </span>
-
-
-    <span class="order-customer-address">
-        <label>Customer Address</label>
-        <input type="text" name="customer-name">
-    </span>
-
-    <span class="order-customer-phone">
-        <label>Order needed by:</label>
-        <input type="text" name="order-needed-by">
-    </span>
-
-    <span class="order-comments">
-        <label>General comments:</label>
-        <input type="text" name="order-comments">
-    </span>
-
-
-    <button>Submit Order</button>
-
-</form>
+</div>
 
 
 
-
-
-<script src="src/jquery-3.1.1.min.js"></script>
-<script src="src/microTmpl.js"></script>
-
-<script>
-
-// add local storage
-   $(".order-nav a").on("click", function onClick() {
-       jThis = $(this),
-        catagory = jThis.attr("data-catagory");
-        if(jThis.hasClass("loaded")) return;
-        $.getJSON("data/"+catagory+".json", function(data){
-            renderSection({
-                catagory:catagory,
-                data:data
-            })
-        });
-   });
-
-   $("#orderForm").on("change", ".item-select", function(){
-    var jThis = $(this),
-        selected = jThis.prop("checked"),
-        itemEle = jThis.closest("li"),
-        id = itemEle.attr("data-id");
-        
-       itemEle.toggleClass("selected", selected);
-        if(selected){
-            addToOrder({
-                id:id,
-                price:itemEle.find(".item-price strong").text(),
-                title:itemEle.find(".item-title").text()
-            });
-        }else{
-            removeFromOrder(id);
-        }
-   });
-
-   $("#orderForm").on("click", "h1", function(){
-    $(this).toggleClass("closed").next("ul").toggleClass("hide");
-   });
-
-   $("#order-summary").on("click", ".remove-item", function(){
-       var id = $(this).closest("li").attr("data-id");
-       removeFromOrder(id); 
-        $("#orderForm").find("[data-id="+id+"]").removeClass("selected").find(".item-select").prop("checked", false);
-   });
-
-    renderSection = function renderSection(dataObj) {
-        var ele = $("#"+dataObj.catagory);
-        ele.html(tmpl("catagoryTmpl", dataObj));
-    }
-
-    addToOrder = function addToOrder(obj) {
-        if(!orderSummary[obj.id]){
-            orderSummary[obj.id] = obj;
-            refreshOrderSummary();
-        }
-    };
-    removeFromOrder = function removeFromOrder(id) {
-        if(orderSummary[id]){
-            delete orderSummary[id];
-            refreshOrderSummary();
-        }
-
-    };
-
-    refreshOrderSummary = function refreshOrderSummary() {
-        $("#order-summary").find("ul").html(tmpl("orderSummaryTmpl", {}))
-    }
-    submitOrder = function submitOrder() {
-        
-    }
-
-var orderSummary = {};
-
-
-</script>
-
+<script src="src/js/jquery-3.1.1.min.js"></script>
+<script src="src/js/microTmpl.js"></script>
+<script src="src/js/bootstrap.js"></script>
+<script src="src/js/shibolet.js"></script>
 
 
     <script type="tmpl" id="catagoryTmpl">
-        <h1><%=catagory%></h1> 
+        <h3><%=catagory%></h3>
         <ul>
             <%data.forEach(function(e){%>
-                <li data-id="<%=e.id%>">
-                    <fieldset>
-                        <label class="item-select-label" for="select-<%=e.id%>"></label>   
-                        <input class="item-select" name="<%=e.id%>" id="select-<%=e.id%>" type="checkbox">
-                        <span class="item-title"><%=e.title%></span>
-                        <img src="images/<%=e.image%>">
-                        <span class="item-price">Price: <strong><%=e.price%></strong></span>
-                        <span class="item-certification">
-                            Certification: <%=e.certification%>
-                        </span>
-                        <span class="item-size">Size: <%=e.size%></span>
-                    </fieldset>
+                <li class="card" data-id="<%=e.id%>">
+                   
+                   <div class="item-image-container">
+                    <img class="card-img-top" src="images/<%=e.image%>">
+                   </div>
+                   
+                   <div class="card-block">
+                    
+                    <div class="card-title item-title"><%=e.title%></div>
+
+                    <div class="item-certification">
+                       Certification: <%=e.certification%>
+                    </div>
+                    
+                    <div class="item-size">Size: <%=e.size%></div>
+                    
+                    <div class="item-price">Price: 
+                        <strong><%=e.price%></strong>
+                    </div>
+                    
+                    <div class="item-qty">Qty:
+                        <input type="number" class="item-qty-input form-control" value="1"/>
+                    </div>
+
+                   </div>
+                   <span class="badge badge-pill badge-success">Added</span>
+                   <div class="action-container card-footer">
+                        <button class="btn item-action btn-primary item-add" data-action="add">Add</button>
+                        <button class="btn item-select item-remove item-action"  data-action="remove">Remove</button>
+                    </div>
+
                 </li>
             <%});%> 
         </ul>
     </script>
+
 
     <script type="tmpl" id="orderSummaryTmpl">
-        <ul>
             <%Object.keys(orderSummary).forEach(function(j){  var e = orderSummary[j];%>
-                <li data-id="<%=e.id%>">
-                    <button class="remove-item">Remove</button>
-                    <fieldset>
-                        <span><%=e.title%></span>
-                        <span>$<%=e.price%></span>
-                        <span class"item-qty">
-                            Qty: <input type="number" name="qty" value="1">
-                        </span>
-                        <span class"item-comment">
-                            comment: <input name="comment" type="text">  
-                        </span>
+                <li class="list-group-item" data-id="<%=e.id%>">
+                      <span><%=e.title%></span>
+                      <span>$<%=e.price%></span>
+                      <span class"item-qty">
+                         Qty: <input type="number" class="item-qty-input" name="qty" value="<%=e.qty%>">
+                      </span>
+                      <span class"item-comment">
+                         Comment: <input type="text" class="item-comment-input" name="comment">
+                      </span>
 
-                    </fieldset>
+                      <button class="btn remove-item">Remove</button>
                 </li>
             <%});%> 
-        </ul>
     </script>
 
+<script type="tmpl" id="sucsessTmpl">
+    <div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">Well done!</h4>
+  <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+  <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+</div>
+</script>
 
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <script>
             window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
             ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
         </script>
-        <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+        <!-- <script src="https://www.google-analytics.com/analytics.js" async defer></script> -->
     </body>
 </html>
