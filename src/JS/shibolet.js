@@ -21,7 +21,7 @@ $(".order-nav").on("click", "a", function onClick() {
     jThis.addClass("loaded");
   });
 
-  //openTabs.push(catagory);
+  openTabs.push(catagory);
   localStorage.setItem("openTabs", JSON.stringify(openTabs));
 
 });
@@ -155,6 +155,7 @@ saveLocaly = function saveLocaly() {
 };
 
 submitOrder = function submitOrder() {
+  var dfd = $.Deferred();
   orderSummaryArr = $.map(orderSummary, function(value, index) {
     return value;
   });
@@ -172,16 +173,45 @@ submitOrder = function submitOrder() {
       orderData: orderPayload
     },
     type: "POST"
+  }).done(function onSubmit(data) {
+    dfd.resolve(data);
   }).done(function orderSucsess() {
-    $("body").prepend($("#sucsessTmpl").html())
+    $(".submit-order").before($("#sucsessTmpl").html());
+    $(".submit-order").remove();
+    localStorage.clear();
   }).fail(function orderFail(err) {
-    alert("Order failed")
+    // 
+    if (navigator.onLine) {
+      alert("You appear to be online, And it will still not submit, somthing is worng...");
+    } else {
+      submitOffline();
+    }
   });
   // if succeses 
   // clearStorage
-
+  return dfd;
 };
 
+
+submitOffline = function() {
+  var offlineOrderCount = localStorage.getItem("offline-order-count") || 0,
+    getOfflineOrders = localStorage.getItem("offline-orders");
+  getOfflineOrders = getOfflineOrders ? JSON.parse(getOfflineOrders) : [];
+  getOfflineOrders.push({
+    orderSummaryString: orderSummary,
+    orderDetailString: orderDetails
+  });
+
+
+  localStorage.setItem("offline-order-count", ++offlineOrderCount);
+  localStorage.setItem("offline-orders", JSON.parse(getOfflineOrders));
+  localStorage.clear();
+
+  alert("Your order has been submitted offline, Make sure to submit it when you are online again");
+}
+
+
+}
 
 //capitalizeFirstLetter
 String.prototype.capitalizeFirstLetter = function() {
@@ -198,51 +228,55 @@ $(document).ready(function() {
   }).done(function renderCatagories(categories) {
     $(".order-nav").html(tmpl("categoryNavTmpl", categories));
     $("#order-form").html(tmpl("categorySectionContainerTmpl", categories));
+    loadSavedState();
   });
 
-  // get storaed items
-  var savedItems = localStorage.getItem("orderSummery"),
-    savedOpenTabs = localStorage.getItem("openTabs"),
-    saveOrderDetails = localStorage.getItem("orderDetails"),
-    itemLineEle,
-    itemObj,
-    summaryLineEle;
-  if (savedOpenTabs) {
-    savedOpenTabs = JSON.parse(savedOpenTabs);
-    savedOpenTabs.forEach(function(e) {
-      console.log(e);
-      $(".order-nav").find("[data-catagory=" + e + "]").trigger("click");
-    });
-  }
+  loadSavedState = function loadSavedState() {
 
-  if (savedItems) {
-    savedItems = JSON.parse(savedItems);
-    setTimeout(function() {
-      Object.keys(savedItems).forEach(function(e) {
-        itemObj = savedItems[e];
-        itemLineEle = getItemLineEle(e);
-        itemLineEle.find(".item-qty-input").val(savedItems[e].qty);
-        itemLineEle.find(".item-add").trigger("click");
-        // need to fix 
-        if (itemObj.comment) {
-          summaryLineEle = getSummaryLineEle(e);
-          summaryLineEle.find(".item-comment-input").val(itemObj.comment);
-        }
+    // get storaed items
+    var savedItems = localStorage.getItem("orderSummery"),
+      savedOpenTabs = localStorage.getItem("openTabs"),
+      saveOrderDetails = localStorage.getItem("orderDetails"),
+      itemLineEle,
+      itemObj,
+      summaryLineEle;
+    if (savedOpenTabs) {
+      savedOpenTabs = JSON.parse(savedOpenTabs);
+      savedOpenTabs.forEach(function(e) {
+        console.log(e);
+        $(".order-nav").find("[data-catagory=" + e + "]").trigger("click");
       });
+    }
 
-    }, 3000);
+    if (savedItems) {
+      savedItems = JSON.parse(savedItems);
+      setTimeout(function() {
+        Object.keys(savedItems).forEach(function(e) {
+          itemObj = savedItems[e];
+          itemLineEle = getItemLineEle(e);
+          itemLineEle.find(".item-qty-input").val(savedItems[e].qty);
+          itemLineEle.find(".item-add").trigger("click");
+          // need to fix 
+          if (itemObj.comment) {
+            summaryLineEle = getSummaryLineEle(e);
+            summaryLineEle.find(".item-comment-input").val(itemObj.comment);
+          }
+        });
 
-    localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+      }, 3000);
 
-  }
-  if (saveOrderDetails) {
-    saveOrderDetails = JSON.parse(saveOrderDetails);
-    orderDetailsKeys = Object.keys(saveOrderDetails);
+      localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
 
-    orderDetailsKeys.forEach(function(e) {
-      $("#order-details").find("[name='" + e + "']").val(saveOrderDetails[e]);
+    }
 
-    });
-  }
+    if (saveOrderDetails) {
+      saveOrderDetails = JSON.parse(saveOrderDetails);
+      orderDetailsKeys = Object.keys(saveOrderDetails);
 
+      orderDetailsKeys.forEach(function(e) {
+        $("#order-details").find("[name='" + e + "']").val(saveOrderDetails[e]);
+
+      });
+    }
+  };
 });
