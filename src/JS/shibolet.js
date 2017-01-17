@@ -1,3 +1,5 @@
+var orderSheet = {};
+
 // add local storage
 var openTabs = [],
   orderDetails = {},
