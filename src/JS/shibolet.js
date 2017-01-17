@@ -4,9 +4,10 @@ var openTabs = [],
   orderSummary = {};
 
 
-$(".order-nav a").on("click", function onClick() {
+$(".order-nav").on("click", "a", function onClick() {
   var jThis = $(this),
     catagory = jThis.attr("data-catagory");
+  $("#order-form").find("#" + catagory).addClass("show").siblings().removeClass("show");
   jThis.addClass("active").siblings().removeClass("active");
   if (jThis.hasClass("loaded")) return;
   $.ajax({
@@ -20,7 +21,7 @@ $(".order-nav a").on("click", function onClick() {
     jThis.addClass("loaded");
   });
 
-  openTabs.push(catagory);
+  //openTabs.push(catagory);
   localStorage.setItem("openTabs", JSON.stringify(openTabs));
 
 });
@@ -81,9 +82,6 @@ $("#order-summary").on("input", ".item-comment-input", function() {
 });
 
 
-$("#order-form").on("click", "h3", function() {
-  $(this).toggleClass("closed").next("ul").toggleClass("hide");
-});
 
 $("#order-summary").on("click", ".remove-item", function() {
   var id = $(this).closest("li").attr("data-id");
@@ -100,6 +98,11 @@ $("#order-summary").on("input", ".item-comment-input", function() {
     orderSummary[id].comment = val;
   }
   saveLocaly();
+});
+
+$(".submit-order").on("click", function onSubmitOrder(argument) {
+  // validate...
+  submitOrder();
 });
 
 $("#order-details").on("change", "input", function() {
@@ -142,7 +145,8 @@ isItemInOrder = function isItemInOrder(id) {
 };
 
 refreshOrderSummary = function refreshOrderSummary() {
-  $("#order-summary").find("ul").html(tmpl("orderSummaryTmpl", {}))
+  $("#order-summary").find("ul").html(tmpl("orderSummaryTmpl", {}));
+  $("#order-total").html(tmpl("orderTotalTmpl"), {});
 };
 
 saveLocaly = function saveLocaly() {
@@ -151,20 +155,51 @@ saveLocaly = function saveLocaly() {
 };
 
 submitOrder = function submitOrder() {
+  orderSummaryArr = $.map(orderSummary, function(value, index) {
+    return value;
+  });
 
-  var orderSummaryString = JSON.stringify(orderSummary);
-  var orderDetailString = JSON.stringify(orderSummary);
-  var orderSummaryString = JSON.stringify(orderSummary);
+  var orderPayload = {
+    orderSummaryString: orderSummary,
+    orderDetailString: orderDetails
+  }
 
-
+  orderPayload = JSON.stringify(orderPayload)
+    // 
+  $.ajax({
+    url: "API/submitOrder.php",
+    data: {
+      orderData: orderPayload
+    },
+    type: "POST"
+  }).done(function orderSucsess() {
+    $("body").prepend($("#sucsessTmpl").html())
+  }).fail(function orderFail(err) {
+    alert("Order failed")
+  });
   // if succeses 
   // clearStorage
 
 };
 
 
+//capitalizeFirstLetter
+String.prototype.capitalizeFirstLetter = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+
 
 $(document).ready(function() {
+
+  $.ajax({
+    url: "data/categories.json",
+    dataType: "JSON"
+  }).done(function renderCatagories(categories) {
+    $(".order-nav").html(tmpl("categoryNavTmpl", categories));
+    $("#order-form").html(tmpl("categorySectionContainerTmpl", categories));
+  });
+
   // get storaed items
   var savedItems = localStorage.getItem("orderSummery"),
     savedOpenTabs = localStorage.getItem("openTabs"),

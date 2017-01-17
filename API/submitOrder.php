@@ -1,73 +1,42 @@
-<?php
-$string = "<h1>Hello, World!</h1>";
-$new_string = filter_var($string, FILTER_SANITIZE_STRING);
-// $new_string is now "Hello, World!"
-
-?>
 
 
 <?php
-if(isset($_POST['first_name'])) {
 
-    // EDIT THE 2 LINES BELOW AS REQUIRED
-    $email_to = "you@yourdomain.com";
-    $email_subject = "Your email subject line";
+$orderData = ""; 
+$orderData = isset($_POST['orderData']) ? $_POST['orderData'] : '';
+$orderData = !empty($_POST['orderData']) ? $_POST['orderData'] : '';
 
+echo $orderData;
+// $prettyOrderData = json_encode($orderData, JSON_PRETTY_PRINT);
+// echo "==================================================";
+// echo $prettyOrderData;
 
-    function died($error) {
-        // your error code can go here
-        echo "We are very sorry, but there were error(s) found with the form you submitted. ";
-        echo "These errors appear below.<br /><br />";
-        echo $error."<br /><br />";
-        echo "Please go back and fix these errors.<br /><br />";
-        die();
-    }
+$json = json_decode($orderData, true);
+//$json = json_decode($orderData, true);
 
-    // validation expected data exists
-    if(!isset($_POST['first_name']) ||
-        !isset($_POST['telephone']) ||
-        !isset($_POST['comments'])) {
-        died('We are sorry, but there appears to be a problem with the form you submitted.');       
-    }
-
-    $first_name = $_POST['first_name']; // required
-    $telephone = $_POST['telephone']; // not required
-    $comments = $_POST['comments']; // required
-
-    $error_message = "";
-    $string_exp = "/^[A-Za-z .'-]+$/";
-  if(!preg_match($string_exp,$first_name)) {
-    $error_message .= 'The Name you entered does not appear to be valid.<br />';
+$orderSummary = $json['orderSummaryString'];
+$orderSummaryString = "Shibolet New Order Submitted:\n";
+foreach($orderSummary as $line){
+   $orderSummaryString .= "\n Id: " . $line['id']."\t\t Qty: ".$line['qty']. "\tPrice: $".$line['price']."\t\t ". $line['comment'];
   }
-  if(strlen($comments) < 2) {
-    $error_message .= 'The Comments you entered do not appear to be valid.<br />';
+
+$orderDetailString = "";
+foreach($orderDetail as $detailLine){
+   $orderDetailString .= "\n " . $detailLine[];
   }
-  if(strlen($error_message) > 0) {
-    died($error_message);
-  }
-    $email_message = "Form details below.\n\n";
 
-    function clean_string($string) {
-      $bad = array("content-type","bcc:","to:","cc:","href");
-      return str_replace($bad,"",$string);
-    }
-
-    $email_message .= "Name: ".clean_string($first_name)."\n";
-    $email_message .= "Telephone: ".clean_string($telephone)."\n";
-    $email_message .= "Comments: ".clean_string($comments)."\n";
+//$orderDetailStr = var_dump($orderDetail);
 
 
-// create email headers
-$headers = 'From: '.$email_from."\r\n".
-'Reply-To: '.$email_from."\r\n" .
-'X-Mailer: PHP/' . phpversion();
-echo (int) mail($email_to, $email_subject, $email_message, $headers);  
-?>
 
-<!-- include your own success html here -->
+$to      = 'adardesign@gmail.com';
+$subject = 'New Order';
+$message = $orderSummaryString . "\n" .$orderDetailStr;
+$headers = 'From: webmaster@shibolet.com' . "\r\n" .
+    'Reply-To: webmaster@shibolet.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
 
-Thank you for contacting us. We will be in touch with you very soon.
+mail($to, $subject, $message, $headers);
+?> 
 
-<?php
-}
-?>
+

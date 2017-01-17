@@ -5,15 +5,17 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Shibolet Order Sheet</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=0">
 
-        <link rel="stylesheet" type="text/css" href="src/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="src/CSS/bootstrap.css">
         <style type="text/css">
         .container section{clear: both; margin-bottom: 20px;}
         #order-form{min-height: 200px;}
+        #order-form section{display: none;}
+        #order-form section.show{display: block;}
         #order-form ul{margin: 0; padding: 0;}        
         #order-form li{
-            border:1px solid #eee;
+            border:1px solid #ccc;
             width: 20%;
             float: left;
             position: relative;
@@ -59,28 +61,27 @@
 
 
 <div class="container">
-    <h1>Shibolet.</h1>
+    <h1>Shibolet Ordering Sheet.</h1>
     
     <div class="card text-center">
       <div class="card-header">
             <nav class="nav order-nav nav-tabs card-header-tabs">
-            <a class="nav-link" href="#honey" data-catagory="honey">Honey</a>
-            <a class="nav-link" href="#tea" data-catagory="tea">Tea</a>
-            <a class="nav-link" href="#nuts" data-catagory="nuts">Nuts</a>
+     
             </nav> 
         </div>
     </div>
 
 
-    <section id="order-form">
-        <section id="honey"></section>
-        <section id="tea"></section>
-        <section id="nuts"></section>
-    </section>
+    <section id="order-form"></section>
 
     <section id="order-summary">
         <h2>Order Summary</h2>
         <ul class="list-group"></ul>
+    </section>
+
+    <section id="order-total">
+        <h2>Order Total</h2>
+        <div class="order-total-container">   
     </section>
 
     <section id="order-details">
@@ -138,7 +139,7 @@
                 <input type="text" name="order-comments">
             </div>
             <div class="form-group">            
-                <button class="btn btn-lg btn-block btn-primary">Submit Order</button>
+                <button class="btn btn-lg btn-block btn-primary submit-order">Submit Order</button>
             </div>
     </form>
 </section>
@@ -147,14 +148,14 @@
 
 
 
-<script src="src/js/jquery-3.1.1.min.js"></script>
-<script src="src/js/microTmpl.js"></script>
-<script src="src/js/bootstrap.js"></script>
-<script src="src/js/shibolet.js"></script>
+<script src="src/JS/jquery-3.1.1.min.js"></script>
+<script src="src/JS/microTmpl.js"></script>
+<script src="src/JS/bootstrap.js"></script>
+<script src="src/JS/shibolet.js"></script>
 
 
     <script type="tmpl" id="catagoryTmpl">
-        <h3><%=catagory%></h3>
+        <h3><%=catagory.capitalizeFirstLetter()%></h3>
         <ul>
             <%data.forEach(function(e){%>
                 <li class="card" data-id="<%=e.id%>">
@@ -210,6 +211,27 @@
                 </li>
             <%});%> 
     </script>
+
+
+    <script type="tmpl" id="categoryNavTmpl">
+            <%obj.forEach(function(j){%>
+                <a class="nav-link" href="#<%=j%>" data-catagory="<%=j%>"><%=j.capitalizeFirstLetter()%></a>
+            <%});%> 
+    </script>
+
+      <script type="tmpl" id="categorySectionContainerTmpl">
+            <%obj.forEach(function(j){%>
+                <section id="<%=j%>"></section>
+            <%});%> 
+    </script>
+
+      <script type="tmpl" id="orderTotalTmpl">
+        order total <%=new Date()%>
+    </script>
+
+
+      
+
 
 <script type="tmpl" id="sucsessTmpl">
     <div class="alert alert-success" role="alert">
