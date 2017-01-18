@@ -5,74 +5,25 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Shibolet Order Sheet</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=0">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" type="text/css" href="src/CSS/bootstrap.css">
-        <style type="text/css">
-        .container section{clear: both; margin-bottom: 20px;}
-        #order-form{min-height: 200px;}
-        #order-form section{display: none;}
-        #order-form section.show{display: block;}
-        #order-form ul{margin: 0; padding: 0;}        
-        #order-form li{
-            border:1px solid #ccc;
-            width: 20%;
-            float: left;
-            position: relative;
-            list-style: none;
-        }
-
-        #order-form li.selected{background-color: #eee;}
-        #order-form li .item-remove{display:none;}
-        #order-form li.selected .item-remove{display: inline;}
-        #order-form li.selected .item-add{display: none;}
-        #order-form li fieldset{ border: none;}
-        #order-form  .item-image-container{
-            margin:0 0 25px;
-            padding:5px;
-            text-align:center;
-            background: #fff;
-        }
-        #order-form .badge-success{display: none;}
-        #order-form  .selected .badge-success{
-            display: block;
-            position: absolute;
-            right:10px;
-            top:10px;
-        }
-        #order-form img{max-width: 180px;}
-        #order-form li span{display: block;}
-        #order-details{
-            clear: both;
-        }
-        #order-summary{
-            margin-bottom: 40px;
-        }
-        .closed{background: #eee;}
-        .hide{display: none;}
-
-       
-        .card-footer{
-            text-align: center;
-        }
-        </style>
-    </head>
+        <link rel="stylesheet" type="text/css" href="src/CSS/order-sheet.css">
+      </head>
     <body>
 
 
 <div class="container">
     <h1>Shibolet Ordering Sheet.</h1>
     
-    <div class="card text-center">
+    <div class="card">
       <div class="card-header">
-            <nav class="nav order-nav nav-tabs card-header-tabs">
-     
-            </nav> 
+            <nav class="nav order-nav nav-tabs card-header-tabs"></nav>
         </div>
     </div>
 
-
     <section id="order-form"></section>
+
 
     <section id="order-summary">
         <h2>Order Summary</h2>
@@ -90,38 +41,42 @@
         <form id="order-information"></form>
             <div class="order-salesmen-id form-group">
                 <label>Date:</label>
-                <input class="form-control" type="date" name="order-date" value="002">
+                <input class="form-control" type="date" name="date">
             </div>
+            
             <div class="form-group order-salesmen-id form-group">
                 <label>salesmen-id</label>
                 <input class="form-control" type="text" name="salesmen-id" value="002">
             </div>
-            <div class="order-customer-name form-group">
-                <label>Customer Company</label>
-                <input class="form-control" type="text" name="customer-name">
+            
+            <div class="order-customer-company form-group">
+                <label>Customer Name</label>
+                <input class="form-control" type="text" required name="company">
             </div>
+
             <div class="form-group order-customer-name form-group">
-                <label>Customer Contact name</label>
-                <input class="form-control" type="text" name="customer-name">
+                <label>Contact Person</label>
+                <input class="form-control" type="text" name="name">
+            </div>
+
+            <div class="form-group order-customer-phone form-group">
+                <label>Phone:</label>
+                <input class="form-control" type="tel" name="email">
             </div>
 
             <div class="form-group order-customer-address form-group">
-                <label>Customer Address</label>
-                <input class="form-control" type="text" name="customer-name">
+                <label>Address:</label>
+                <input class="form-control" type="text" name="customer-address">
             </div>
 
-
-
-            <div class="form-group order-customer-address form-group">
-                <label>Customer Address</label>
-                <input class="form-control" type="text" name="customer-name">
+            <div class="form-group order-customer-ship-address form-group">
+                <label>Ship to Address: (If different)</label>
+                <input class="form-control" type="text" name="customer-address">
             </div>
 
-
-
-            <div class="form-group order-customer-address form-group">
-                <label>Customer Address</label>
-                <input class="form-control" type="text" name="customer-name">
+            <div class="form-group order-customer-email form-group">
+                <label>Email:</label>
+                <input class="form-control" type="text" name="email">
             </div>
 
 
@@ -130,14 +85,22 @@
                 <input class="form-control" type="date" name="order-needed-by">
             </div>
 
-            <div class="order-customer-phone form-group">
-                <input type="text" name="order-needed-by">
+            <div class="area form-group">
+                <label>Area:</label>
+                <input class="form-control" type="text" name="area">
             </div>
 
-            <div class="order-comments form-group">
-                <label>General comments:</label>
-                <input type="text" name="order-comments">
+
+             <div class="payment-terms form-group">
+                <label>payment-terms:</label>
+                <input class="form-control" type="text" name="payment-terms">
             </div>
+
+            <div class="form-group order-comments">
+                <label>General comments:</label>
+                <textarea type="text" class="form-control" name="order-comments"></textarea>
+            </div>
+            
             <div class="form-group">            
                 <button class="btn btn-lg btn-block btn-primary submit-order">Submit Order</button>
             </div>
@@ -152,10 +115,11 @@
 <script src="src/JS/microTmpl.js"></script>
 <script src="src/JS/bootstrap.js"></script>
 <script src="src/JS/shibolet.js"></script>
+<script src="src/JS/utils.js"></script>
 
 
     <script type="tmpl" id="catagoryTmpl">
-        <h3><%=catagory.capitalizeFirstLetter()%></h3>
+        <h3><%=utils.format.capitalize(catagory)%></h3>
         <ul>
             <%data.forEach(function(e){%>
                 <li class="card" data-id="<%=e.id%>">
@@ -169,16 +133,16 @@
                     <div class="card-title item-title"><%=e.title%></div>
 
                     <div class="item-certification">
-                       Certification: <%=e.certification%>
+                       Cert.: <strong><%=e.certification%></strong>
                     </div>
                     
-                    <div class="item-size">Size: <%=e.size%></div>
+                    <div class="item-size">Size: <strong><%=e.size%></strong></div>
                     
-                    <div class="item-price">Price: 
-                        <strong><%=e.price%></strong>
+                    <div class="item-price" data-price="<%=e.price%>">Price: 
+                        <strong><%=utils.format.currency(e.price)%></strong>
                     </div>
                     
-                    <div class="item-qty">Qty:
+                    <div class="item-qty form-inline">Qty:
                         <input type="number" class="item-qty-input form-control" value="1"/>
                     </div>
 
@@ -215,7 +179,7 @@
 
     <script type="tmpl" id="categoryNavTmpl">
             <%obj.forEach(function(j){%>
-                <a class="nav-link" href="#<%=j%>" data-catagory="<%=j%>"><%=j.capitalizeFirstLetter()%></a>
+                <a class="nav-link" href="#<%=j%>" data-catagory="<%=j%>"><%=utils.format.capitalize(j)%></a>
             <%});%> 
     </script>
 
@@ -226,7 +190,10 @@
     </script>
 
       <script type="tmpl" id="orderTotalTmpl">
-        order total <%=new Date()%>
+        <h5>Order Total:</h5>
+        <span class="total-ammount">Qty: <%=count%></span>
+        <span class="total-ammount"><%=utils.format.currency(ammount)%></span> 
+
     </script>
 
 
@@ -235,11 +202,33 @@
 
 <script type="tmpl" id="sucsessTmpl">
     <div class="alert alert-success" role="alert">
-  <h4 class="alert-heading">Well done!</h4>
-  <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-  <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
-</div>
+        <h4 class="alert-heading">Well done!</h4>
+        <p class="mb-0">The Order is submitted!</p>
+    </div>
 </script>
+
+<script type="tmpl" id="savedDataTmpl">
+    <div class="alert alert-warning page-saved-message" role="alert">
+        <h4 class="alert-heading">Please Note!</h4>
+        <p class="mb-0">The current state of the page was restored from last action that was saved..</p>
+        <p class="mb-1">To clear the last saved information <a class="clearData" data-type="tempState" href="#">Click here!</a></p>
+        <p class="mb-1">To clear all information including offline submitted saved orders  <a href="#" class="clearData" data-type="all">Click here!</a></p>
+    </div>
+</script>
+
+
+ <div class="modal" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <img src="" class="enlargeImageModalSource" style="width: 100%;">
+        </div>
+      </div>
+    </div>
+</div>
 
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <script>

@@ -6,7 +6,9 @@ var openTabs = [],
   orderSummary = {};
 
 
-$(".order-nav").on("click", "a", function onClick() {
+$(".order-nav").on("click", "a", function onNavClick(e) {
+  e.preventDefault();
+
   var jThis = $(this),
     catagory = jThis.attr("data-catagory");
   $("#order-form").find("#" + catagory).addClass("show").siblings().removeClass("show");
@@ -28,6 +30,12 @@ $(".order-nav").on("click", "a", function onClick() {
 
 });
 
+$(document).on('click', "img", function() {
+  $('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+  $('#enlargeImageModal').modal('show');
+});
+
+
 $("#order-form").on("click", ".item-action", function() {
   var jThis = $(this),
     action = jThis.attr("data-action"),
@@ -38,7 +46,7 @@ $("#order-form").on("click", ".item-action", function() {
     itemEle.addClass("selected");
     addToOrder({
       id: id,
-      price: itemEle.find(".item-price strong").text(),
+      price: itemEle.find(".item-price").attr("data-price"),
       title: itemEle.find(".item-title").text(),
       qty: itemEle.find(".item-qty-input").val()
     });
@@ -56,6 +64,7 @@ $("#order-form").on("input", ".item-qty-input", function() {
   if (isItemInOrder(id)) {
     orderSummary[id].qty = val;
     getSummaryLineEle(id).find(".item-qty-input").val(val);
+    refreshOrderTotals();
   }
   saveLocaly();
 });
@@ -68,6 +77,7 @@ $("#order-summary").on("input", ".item-qty-input", function() {
   if (isItemInOrder(id)) {
     orderSummary[id].qty = val;
     getItemLineEle(id).find(".item-qty-input").val(val);
+    refreshOrderTotals();
   }
   saveLocaly();
 });
@@ -102,10 +112,27 @@ $("#order-summary").on("input", ".item-comment-input", function() {
   saveLocaly();
 });
 
-$(".submit-order").on("click", function onSubmitOrder(argument) {
+$(".submit-order").on("click", function onSubmitOrder() {
   // validate...
   submitOrder();
 });
+
+
+
+$(document).on("click", ".clearData", function clearData(e) {
+  e.preventDefault();
+
+
+  var jThis = $(this),
+    type = jThis.attr("data-type");
+  if (type === "all") {
+    //clearTempSavedData();
+  } else {
+    clearTempSavedData();
+  }
+  location.reload();
+});
+
 
 $("#order-details").on("change", "input", function() {
   var jThis = $(this),
@@ -132,6 +159,7 @@ addToOrder = function addToOrder(obj) {
   if (!orderSummary[obj.id]) {
     orderSummary[obj.id] = obj;
     refreshOrderSummary();
+    refreshOrderTotals();
   }
   saveLocaly();
 };
@@ -139,6 +167,7 @@ removeFromOrder = function removeFromOrder(id) {
   if (orderSummary[id]) {
     delete orderSummary[id];
     refreshOrderSummary();
+    refreshOrderTotals();
   }
 
 };
@@ -148,9 +177,25 @@ isItemInOrder = function isItemInOrder(id) {
 
 refreshOrderSummary = function refreshOrderSummary() {
   $("#order-summary").find("ul").html(tmpl("orderSummaryTmpl", {}));
-  $("#order-total").html(tmpl("orderTotalTmpl"), {});
+  refreshOrderTotals();
 };
 
+calculateOrderTotals = function calculateOrderTotals() {
+  var ammount = 0,
+    count = 0,
+    totals = {};
+  $.each(orderSummary, function(i, e) {
+    ammount += e.price * e.qty;
+    count += (+e.qty);
+  });
+  totals.ammount = ammount;
+  totals.count = count;
+  return totals;
+};
+
+refreshOrderTotals = function refreshOrderTotal() {
+  $("#order-total").html(tmpl("orderTotalTmpl", calculateOrderTotals()));
+};
 saveLocaly = function saveLocaly() {
   // 
   localStorage.setItem("orderSummery", JSON.stringify(orderSummary));
@@ -180,7 +225,7 @@ submitOrder = function submitOrder() {
   }).done(function orderSucsess() {
     $(".submit-order").before($("#sucsessTmpl").html());
     $(".submit-order").remove();
-    localStorage.clear();
+    clearTempSavedData();
   }).fail(function orderFail(err) {
     // 
     if (navigator.onLine) {
@@ -195,6 +240,13 @@ submitOrder = function submitOrder() {
 };
 
 
+clearTempSavedData = function clearTempSavedData() {
+  localStorage.removeItem("orderSummery");
+  localStorage.removeItem("orderDetails");
+  localStorage.removeItem("openTabs");
+}
+
+
 submitOffline = function() {
   var offlineOrderCount = localStorage.getItem("offline-order-count") || 0,
     getOfflineOrders = localStorage.getItem("offline-orders");
@@ -207,18 +259,10 @@ submitOffline = function() {
 
   localStorage.setItem("offline-order-count", ++offlineOrderCount);
   localStorage.setItem("offline-orders", JSON.parse(getOfflineOrders));
-  localStorage.clear();
+  // localStorage.clear();
 
   alert("Your order has been submitted offline, Make sure to submit it when you are online again");
 }
-
-
-}
-
-//capitalizeFirstLetter
-String.prototype.capitalizeFirstLetter = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
 
 
 
@@ -242,6 +286,12 @@ $(document).ready(function() {
       itemLineEle,
       itemObj,
       summaryLineEle;
+
+
+    if (savedItems || savedOpenTabs || saveOrderDetails) {
+      $("body").prepend($("#savedDataTmpl").html());
+    }
+
     if (savedOpenTabs) {
       savedOpenTabs = JSON.parse(savedOpenTabs);
       savedOpenTabs.forEach(function(e) {
