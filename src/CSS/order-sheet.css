@@ -1,0 +1,51 @@
+      .container section{clear: both; margin: 20px 0 0; overflow: hidden;}
+        #order-form{min-height: 200px;}
+        #order-form section{display: none;}
+        #order-form section.show{display: block;}
+        #order-form ul{margin: 0; padding: 0;}        
+        #order-form li{
+            border:1px solid #ccc;
+            width: 20%;
+            float: left;
+            position: relative;
+            list-style: none;
+        }
+
+        #order-form li.selected{background-color: #edffe7;}
+        #order-form li .item-remove{display:none;}
+        #order-form li.selected .item-remove{display: inline;}
+        #order-form li.selected .item-add{display: none;}
+        #order-form li fieldset{ border: none;}
+        #order-form  .item-image-container{
+            padding:5px;
+            text-align:center;
+            background: #fff;
+        }
+        #order-form .badge-success{display: none;}
+        #order-form  .selected .badge-success{
+            display: block;
+            position: absolute;
+            right:10px;
+            top:10px;
+        }
+        #order-form img{max-width: 80%;}
+        #order-form li span{display: block;}
+        #order-details{
+            clear: both;
+        }
+        #order-summary{
+            margin-bottom: 40px;
+        }
+        .closed{background: #eee;}
+        .hide{display: none;}
+
+       
+        .card-footer{
+            text-align: center;
+        }
+
+        .page-saved-message{
+        }
+        img {
+            cursor: zoom-in;
+        }
