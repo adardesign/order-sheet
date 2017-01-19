@@ -31,14 +31,13 @@
     </section>
 
     <section id="order-total">
-        <h2>Order Total</h2>
+        <h2 class="panel-heading"><span class="panel-title">Order Total</span></h2>
         <div class="order-total-container">   
     </section>
 
-    <section id="order-details">
-    <h2>Order Information:</h2>
-
-        <form id="order-information"></form>
+    <section class="panel panel-primary" id="order-details">
+        <h2 class="panel-title">Order Information:</h2>
+        <form id="order-information">
             <div class="order-salesmen-id form-group">
                 <label>Date:</label>
                 <input class="form-control" type="date" name="date">
@@ -102,7 +101,7 @@
             </div>
             
             <div class="form-group">            
-                <button class="btn btn-lg btn-block btn-primary submit-order">Submit Order</button>
+                <button type="submit" class="btn btn-lg btn-block btn-primary submit-order">Submit Order</button>
             </div>
     </form>
 </section>

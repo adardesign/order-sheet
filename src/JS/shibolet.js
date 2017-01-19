@@ -112,8 +112,14 @@ $("#order-summary").on("input", ".item-comment-input", function() {
   saveLocaly();
 });
 
-$(".submit-order").on("click", function onSubmitOrder() {
+$("#order-information").on("submit", function onSubmitOrder(e) {
+  e.preventDefault();
   // validate...
+
+  if (navigator.onLine === false) {
+    submitOffline();
+    return;
+  }
   submitOrder();
 });
 
@@ -258,12 +264,15 @@ submitOffline = function() {
 
 
   localStorage.setItem("offline-order-count", ++offlineOrderCount);
-  localStorage.setItem("offline-orders", JSON.parse(getOfflineOrders));
+  localStorage.setItem("offline-orders", JSON.stringify(getOfflineOrders));
   // localStorage.clear();
 
   alert("Your order has been submitted offline, Make sure to submit it when you are online again");
 }
 
+onOnlineChanger = function onOnlineChanger(e) {};
+window.addEventListener('online', onOnlineChanger);
+window.addEventListener('offline', onOnlineChanger);
 
 
 $(document).ready(function() {
@@ -283,6 +292,7 @@ $(document).ready(function() {
     var savedItems = localStorage.getItem("orderSummery"),
       savedOpenTabs = localStorage.getItem("openTabs"),
       saveOrderDetails = localStorage.getItem("orderDetails"),
+      offlineOrder,
       itemLineEle,
       itemObj,
       summaryLineEle;
@@ -330,5 +340,12 @@ $(document).ready(function() {
 
       });
     }
+
+    // Handle offlineOrder
+    offlineOrder = localStorage.getItem("offline-order-count");
+    if (offlineOrder) {
+      $("#container").prepend("<a href='#'>See Offline Orders</a>");
+    }
+
   };
 });
