@@ -38,31 +38,39 @@
     <section class="panel panel-primary" id="order-details">
         <h2 class="panel-title">Order Information:</h2>
         <form id="order-information">
-            <div class="order-salesmen-id form-group">
-                <label>Date:</label>
-                <input class="form-control" type="date" name="date">
-            </div>
-            
-            <div class="form-group order-salesmen-id form-group">
-                <label>salesmen-id</label>
-                <input class="form-control" type="text" name="salesmen-id" value="002">
-            </div>
-            
-            <div class="order-customer-company form-group">
-                <label>Customer Name</label>
-                <input class="form-control" type="text" required name="company">
-            </div>
+            <div class="row">
+                <div class="order-date form-group col-md-6">
+                    <label>Date:</label>
+                    <input class="form-control" type="date" name="date">
+                </div>
+                
+                <div class="form-group order-salesmen-id col-md-6 form-group">
+                    <label>salesmen-id</label>
+                    <input class="form-control" type="text" name="salesmen-id" value="002">
+                </div>                  
+              </div>
 
-            <div class="form-group order-customer-name form-group">
-                <label>Contact Person</label>
-                <input class="form-control" type="text" name="name">
-            </div>
+            <div class="row">
+                <div class="order-customer-company form-group col-md-6">
+                    <label>Customer Name</label>
+                    <input class="form-control" type="text" required name="company">
+                </div>
 
-            <div class="form-group order-customer-phone form-group">
-                <label>Phone:</label>
-                <input class="form-control" type="tel" name="email">
+                <div class="form-group order-customer-name form-group col-md-6">
+                    <label>Contact Person</label>
+                    <input class="form-control" type="text" name="name">
+                </div>
             </div>
-
+            <div class="row">
+                <div class="form-group order-customer-phone form-group col-md-6">
+                    <label>Phone:</label>
+                    <input class="form-control" type="tel" name="email">
+                </div>
+                <div class="form-group order-customer-email form-group col-md-6">
+                    <label>Email:</label>
+                    <input class="form-control" type="text" name="email">
+                </div>
+            </div>
             <div class="form-group order-customer-address form-group">
                 <label>Address:</label>
                 <input class="form-control" type="text" name="customer-address">
@@ -73,27 +81,24 @@
                 <input class="form-control" type="text" name="customer-address">
             </div>
 
-            <div class="form-group order-customer-email form-group">
-                <label>Email:</label>
-                <input class="form-control" type="text" name="email">
+         
+            <div class="row">
+                <div class="order-needed-by form-group col-md-4">
+                    <label>Order Needed By:</label>
+                    <input class="form-control" type="date" name="order-needed-by">
+                </div>
+
+                <div class="area form-group col-md-4">
+                    <label>Area:</label>
+                    <input class="form-control" type="text" name="area">
+                </div>
+                 <div class="payment-terms form-group col-md-4">
+                    <label>payment-terms:</label>
+                    <input class="form-control" type="text" name="payment-terms">
+                </div>
             </div>
 
-
-            <div class="order-needed-by form-group">
-                <label>Order Needed By:</label>
-                <input class="form-control" type="date" name="order-needed-by">
-            </div>
-
-            <div class="area form-group">
-                <label>Area:</label>
-                <input class="form-control" type="text" name="area">
-            </div>
-
-
-             <div class="payment-terms form-group">
-                <label>payment-terms:</label>
-                <input class="form-control" type="text" name="payment-terms">
-            </div>
+            
 
             <div class="form-group order-comments">
                 <label>General comments:</label>
@@ -112,7 +117,6 @@
 
 <script src="src/JS/jquery-3.1.1.min.js"></script>
 <script src="src/JS/microTmpl.js"></script>
-<script src="src/JS/bootstrap.js"></script>
 <script src="src/JS/shibolet.js"></script>
 <script src="src/JS/utils.js"></script>
 
@@ -141,7 +145,8 @@
                         <strong><%=utils.format.currency(e.price)%></strong>
                     </div>
                     
-                    <div class="item-qty form-inline">Qty:
+                    <div class="item-qty form-inline">
+                        <label>Qty:</label>
                         <input type="number" class="item-qty-input form-control" value="1"/>
                     </div>
 
@@ -159,18 +164,27 @@
 
 
     <script type="tmpl" id="orderSummaryTmpl">
+            <li class="list-group-item list-group-header row">
+                      <span class="col-md-4 order-item-title">Title</span>
+                      <span class="col-md-2 order-item-qty ">Qty</span>
+                      <span class="col-md-2 order-item-price">Price</span>
+                      <span class="col-md-3 order-item-comment">Comment</span>
+                      <span class="col-md-1 order-item-action">Action</span>
+                </li>
             <%Object.keys(orderSummary).forEach(function(j){  var e = orderSummary[j];%>
-                <li class="list-group-item" data-id="<%=e.id%>">
-                      <span><%=e.title%></span>
-                      <span>$<%=e.price%></span>
-                      <span class"item-qty">
-                         Qty: <input type="number" class="item-qty-input" name="qty" value="<%=e.qty%>">
+                
+                <li class="list-group-item row" data-id="<%=e.id%>">
+                      <span class="col-md-4 order-item-title"><%=e.title%></span>
+                      <span class="col-md-2 item-qty">
+                         <input type="number" class="item-qty-input" name="qty" value="<%=e.qty%>">
                       </span>
-                      <span class"item-comment">
-                         Comment: <input type="text" class="item-comment-input" name="comment">
+                      <span class="col-md-2 order-item-price">$<%=e.price%></span>
+                      <span class="col-md-3 order-item-comment">
+                        <input type="text" class="item-comment-input" name="comment">
                       </span>
-
-                      <button class="btn remove-item">Remove</button>
+                      <span class="col-md-1 order-item-action">
+                        <button class="btn btn-sm remove-item">Remove</button>
+                      </span>
                 </li>
             <%});%> 
     </script>
@@ -215,6 +229,37 @@
     </div>
 </script>
 
+<script type="tmpl" id="offlineOrdersTmpl">
+    <div class="card">
+        <div class="card-header">
+            Offline Orders 
+        </div>
+        <div class="card-block">
+            <ul>
+                <li class="list-group-item list-group-header row">
+                      <span class="col-md-8">ID</span>
+                      <span class="col-md-2">ID</span>
+                      <span class="col-md-2">Action</span>
+                </li>
+
+                <%obj.forEach(function(e, i){%>
+                    <li class="row" data-order-id="<%=i%>">
+                      <span class="col-md-8"><%=e.orderDetailString.company%></span>
+                      <span class="col-md-2"><%=i+1%></span>
+                      <span class="col-md-2"><button>Submit</button></span>
+                    </li>
+                <%});%> 
+
+            </ul>
+        </div>
+        <div class="card-footer">
+
+            <button class="btn btn-lg remove-item">Submit</button>
+            <button class="btn btn-lg remove-item">Clear All</button>
+            <button class="btn btn-lg remove-item">Close</button>
+        </div>
+    </div>
+</script>
 
  <div class="modal" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

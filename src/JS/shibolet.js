@@ -1,7 +1,5 @@
-var orderSheet = {};
-
-// add local storage
-var openTabs = [],
+var orderSheet = {},
+  openTabs = [],
   orderDetails = {},
   orderSummary = {};
 
@@ -139,14 +137,39 @@ $(document).on("click", ".clearData", function clearData(e) {
   location.reload();
 });
 
+// toggle-offline-orders
 
-$("#order-details").on("change", "input", function() {
+
+
+$("#order-details").on("change", ":input", function() {
   var jThis = $(this),
     name = jThis.attr("name"),
     value = jThis.val();
   orderDetails[name] = value;
   localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
 });
+
+
+$(document).on("click", ".toggle-offline-orders", function onToggleOfflineOrders(e) {
+  e.preventDefault();
+  renderOfflineOrders();
+  toggleOfflineOrders();
+});
+
+renderOfflineOrders = function renderOfflineOrders() {
+  if ($(".offline-orders-container").length) return;
+
+  offlineOrders = localStorage.getItem("offline-orders");
+  if (!offlineOrders) return;
+  offlineOrders = JSON.parse(offlineOrders);
+  $("body").append(tmpl("offlineOrdersTmpl", offlineOrders));
+
+};
+toggleOfflineOrders = function toggleOfflineOrders() {
+  $("#offline-orders-container").addClass("show");
+  $("body").addClass("modal-active");
+}
+
 
 getSummaryLineEle = function getSummaryLineEle(id) {
   return $("#order-summary").find("[data-id=" + id + "]");
@@ -275,77 +298,83 @@ window.addEventListener('online', onOnlineChanger);
 window.addEventListener('offline', onOnlineChanger);
 
 
-$(document).ready(function() {
-
-  $.ajax({
-    url: "data/categories.json",
-    dataType: "JSON"
-  }).done(function renderCatagories(categories) {
-    $(".order-nav").html(tmpl("categoryNavTmpl", categories));
-    $("#order-form").html(tmpl("categorySectionContainerTmpl", categories));
-    loadSavedState();
+setTimeout(function setDate() {
+  Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0, 10);
   });
-
-  loadSavedState = function loadSavedState() {
-
-    // get storaed items
-    var savedItems = localStorage.getItem("orderSummery"),
-      savedOpenTabs = localStorage.getItem("openTabs"),
-      saveOrderDetails = localStorage.getItem("orderDetails"),
-      offlineOrder,
-      itemLineEle,
-      itemObj,
-      summaryLineEle;
+  $(".order-date :input").val(new Date().toDateInputValue()).trigger("input");
+}, 1000);
 
 
-    if (savedItems || savedOpenTabs || saveOrderDetails) {
-      $("body").prepend($("#savedDataTmpl").html());
-    }
-
-    if (savedOpenTabs) {
-      savedOpenTabs = JSON.parse(savedOpenTabs);
-      savedOpenTabs.forEach(function(e) {
-        console.log(e);
-        $(".order-nav").find("[data-catagory=" + e + "]").trigger("click");
-      });
-    }
-
-    if (savedItems) {
-      savedItems = JSON.parse(savedItems);
-      setTimeout(function() {
-        Object.keys(savedItems).forEach(function(e) {
-          itemObj = savedItems[e];
-          itemLineEle = getItemLineEle(e);
-          itemLineEle.find(".item-qty-input").val(savedItems[e].qty);
-          itemLineEle.find(".item-add").trigger("click");
-          // need to fix 
-          if (itemObj.comment) {
-            summaryLineEle = getSummaryLineEle(e);
-            summaryLineEle.find(".item-comment-input").val(itemObj.comment);
-          }
-        });
-
-      }, 3000);
-
-      localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
-
-    }
-
-    if (saveOrderDetails) {
-      saveOrderDetails = JSON.parse(saveOrderDetails);
-      orderDetailsKeys = Object.keys(saveOrderDetails);
-
-      orderDetailsKeys.forEach(function(e) {
-        $("#order-details").find("[name='" + e + "']").val(saveOrderDetails[e]);
-
-      });
-    }
-
-    // Handle offlineOrder
-    offlineOrder = localStorage.getItem("offline-order-count");
-    if (offlineOrder) {
-      $("#container").prepend("<a href='#'>See Offline Orders</a>");
-    }
-
-  };
+$.ajax({
+  url: "data/categories.json",
+  dataType: "JSON"
+}).done(function renderCatagories(categories) {
+  $(".order-nav").html(tmpl("categoryNavTmpl", categories));
+  $("#order-form").html(tmpl("categorySectionContainerTmpl", categories));
+  loadSavedState();
 });
+
+loadSavedState = function loadSavedState() {
+
+  // get storaed items
+  var storedItems = localStorage.getItem("orderSummery"),
+    storedOpenTabs = localStorage.getItem("openTabs"),
+    storedOrderDetails = localStorage.getItem("orderDetails"),
+    offlineOrder,
+    itemLineEle,
+    itemObj,
+    summaryLineEle;
+
+
+  if (storedItems || storedOpenTabs || storedOrderDetails) {
+    $("body").prepend($("#savedDataTmpl").html());
+  }
+
+  if (storedOpenTabs) {
+    storedOpenTabs = JSON.parse(storedOpenTabs);
+    storedOpenTabs.forEach(function(e) {
+      console.log(e);
+      $(".order-nav").find("[data-catagory=" + e + "]").trigger("click");
+    });
+  }
+
+  if (storedItems) {
+    storedItems = JSON.parse(storedItems);
+    setTimeout(function() {
+      Object.keys(storedItems).forEach(function(e) {
+        itemObj = storedItems[e];
+        itemLineEle = getItemLineEle(e);
+        itemLineEle.find(".item-qty-input").val(storedItems[e].qty);
+        itemLineEle.find(".item-add").trigger("click");
+        // need to fix 
+        if (itemObj.comment) {
+          summaryLineEle = getSummaryLineEle(e);
+          summaryLineEle.find(".item-comment-input").val(itemObj.comment);
+        }
+      });
+
+    }, 3000);
+
+    localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+  }
+
+  if (storedOrderDetails) {
+    storedOrderDetails = JSON.parse(storedOrderDetails);
+    orderDetailsKeys = Object.keys(storedOrderDetails);
+
+    orderDetailsKeys.forEach(function(e) {
+      $("#order-details").find("[name='" + e + "']").val(storedOrderDetails[e]);
+    });
+    orderDetails = storedOrderDetails;
+  }
+
+  // Handle offlineOrder
+  offlineOrder = localStorage.getItem("offline-order-count");
+  if (offlineOrder) {
+    $(".container").prepend("<a class='toggle-offline-orders' href='#'>See Offline Orders</a>");
+  }
+
+};

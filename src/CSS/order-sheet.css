@@ -21,6 +21,10 @@
             text-align:center;
             background: #fff;
         }
+        #order-form .item-qty{margin-top:10px;}
+        #order-form .item-qty label{float:left;margin-right: 10px;}
+        #order-form .item-qty-input{float:left; width:60%!important;}
+
         #order-form .badge-success{display: none;}
         #order-form  .selected .badge-success{
             display: block;
@@ -36,6 +40,11 @@
         #order-summary{
             margin-bottom: 40px;
         }
+        .list-group-header{font-weight: bold;}
+        .list-group-header{border-bottom:2px solid #000; background-color: #f4f4f4; }
+        #order-summary .item-qty-input{width:40%!important; text-align: center;}
+        #order-summary .item-action{text-align: right;}
+
         .closed{background: #eee;}
         .hide{display: none;}
 
