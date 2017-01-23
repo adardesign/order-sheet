@@ -28,10 +28,30 @@ $(".order-nav").on("click", "a", function onNavClick(e) {
 
 });
 
-$(document).on('click', "img", function() {
-  $('.enlargeImageModalSource').attr('src', $(this).attr('src'));
-  $('#enlargeImageModal').modal('show');
+$(document).on('click', ".card-img-top", function() {
+  var jThis = $(this),
+    imgSrc = jThis.attr("src"),
+    modal = $(".large-image"),
+    title = jThis.closest(".card").find(".item-title").text(),
+    largeImg = modal.find("img").attr("src", imgSrc);
+  modal.addClass("show");
+  modal.find("h1").text(title);
+  $("body").addClass("modal-active");
 });
+
+$(document).on('click', ".modal-active", function closeModal(e) {
+  var eTarget = $(e.target);
+  if (eTarget.closest(".modal-box").length) return;
+  $(".modal-box").removeClass("show");
+  $("body").removeClass("modal-active");
+
+});
+
+$(document).on('click', ".close-alert", function closeAlert(e) {
+  $(this).closest(".alert").remove();
+
+});
+
 
 
 $("#order-form").on("click", ".item-action", function() {
@@ -152,23 +172,29 @@ $("#order-details").on("change", ":input", function() {
 
 $(document).on("click", ".toggle-offline-orders", function onToggleOfflineOrders(e) {
   e.preventDefault();
-  renderOfflineOrders();
-  toggleOfflineOrders();
+  showOfflineOrders();
 });
 
-renderOfflineOrders = function renderOfflineOrders() {
-  if ($(".offline-orders-container").length) return;
+showOfflineOrders = function showOfflineOrders() {
+  if (!$(".offline-orders").length) {
+    var offlineOrders = localStorage.getItem("offline-orders");
+    if (!offlineOrders) return;
+    offlineOrders = JSON.parse(offlineOrders);
+    $("body").append(tmpl("offlineOrdersTmpl", offlineOrders));
+  }
 
-  offlineOrders = localStorage.getItem("offline-orders");
-  if (!offlineOrders) return;
-  offlineOrders = JSON.parse(offlineOrders);
-  $("body").append(tmpl("offlineOrdersTmpl", offlineOrders));
+
+  $(".offline-orders").addClass("show");
+  $("body").addClass("modal-active");
 
 };
-toggleOfflineOrders = function toggleOfflineOrders() {
-  $("#offline-orders-container").addClass("show");
-  $("body").addClass("modal-active");
-}
+
+
+$(document).on("click", ".close-modal", function closeModal(e) {
+  $(this).closest(".modal-box").removeClass("show");
+  $("body").removeClass("modal-active");
+});
+
 
 
 getSummaryLineEle = function getSummaryLineEle(id) {
@@ -219,11 +245,15 @@ calculateOrderTotals = function calculateOrderTotals() {
   });
   totals.ammount = ammount;
   totals.count = count;
+  orderDetails.ammount = totals.ammount;
+  orderDetails.count = totals.count;
+  localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
   return totals;
 };
 
 refreshOrderTotals = function refreshOrderTotal() {
   $("#order-total").html(tmpl("orderTotalTmpl", calculateOrderTotals()));
+
 };
 saveLocaly = function saveLocaly() {
   // 
@@ -355,7 +385,6 @@ loadSavedState = function loadSavedState() {
           summaryLineEle.find(".item-comment-input").val(itemObj.comment);
         }
       });
-
     }, 3000);
 
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
@@ -372,9 +401,9 @@ loadSavedState = function loadSavedState() {
   }
 
   // Handle offlineOrder
-  offlineOrder = localStorage.getItem("offline-order-count");
-  if (offlineOrder) {
-    $(".container").prepend("<a class='toggle-offline-orders' href='#'>See Offline Orders</a>");
+  var offlineOrderCount = localStorage.getItem("offline-order-count");
+  if (offlineOrderCount > 0) {
+    $(".container").prepend("<a class='toggle-offline-orders' href='#'>See " + offlineOrderCount + " Offline Orders</a>");
   }
 
 };
